@@ -1,0 +1,206 @@
+# Lines ending with `# [hidden]` won't be shown on cheatsheet
+# Lines starting with #! are section headings
+
+#!
+##! Media & Hardware Keys
+# Volume
+bindl  = , XF86AudioMute, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 0% # [hidden]
+bindl  = Alt, XF86AudioMute, exec, wpctl set-mute @DEFAULT_SOURCE@ toggle # [hidden]
+bindl  = Super, XF86AudioMute, exec, wpctl set-mute @DEFAULT_SOURCE@ toggle # [hidden]
+bindl  = Super+Shift, M, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 0% # [hidden]
+bindle = , XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+ # [hidden]
+bindle = , XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- # [hidden]
+
+# Brightness
+binde = , XF86MonBrightnessUp, exec, brightnessctl s +5%
+binde = , XF86MonBrightnessDown, exec, brightnessctl s 5%-
+
+# Media playback
+bindl = Super+Shift, N, exec, playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"` # Next track
+bindl = Super+Shift, B, exec, playerctl previous # Previous track
+bindl = Super+Shift, P, exec, playerctl play-pause # Play/pause media
+bindl = , XF86AudioNext, exec, playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"` # [hidden]
+bindl = , XF86AudioPrev, exec, playerctl previous # [hidden]
+bindl = , XF86AudioPlay, exec, playerctl play-pause # [hidden]
+bindl = , XF86AudioPause, exec, playerctl play-pause # [hidden]
+bind  = Super+Shift+Alt, mouse:275, exec, playerctl previous # [hidden]
+bind  = Super+Shift+Alt, mouse:276, exec, playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"` # [hidden]
+
+# Hardware
+bindle = , XF86Launch3, exec, rog-control-center
+
+#!
+##! Essentials for beginners
+bind = Super, Return, exec, kitty # Launch terminal
+bind = Super, O, exec, ~/Documents/refresh_rate_serivce/refresh_rate_adjuster.sh # Refresh rate switcher
+bind = Ctrl+Super, T, exec, ~/.config/ags/scripts/color_generation/switchwall.sh # Change wallpaper
+
+##! Actions
+# Clipboard
+bind = Super, V, exec, pkill fuzzel || cliphist list | fuzzel --match-mode fzf --dmenu | cliphist decode | wl-copy # Clipboard history >> clipboard
+
+# Screenshots
+bind  = Super+Shift, S, exec, grimblast --freeze --notify copysave area ~/Pictures/Screenshots/Screenshot_"$(date '+%Y-%m-%d_%H.%M.%S')".png # Screen snip (select area) >> clipboard & file
+bind  = Shift+Alt, S, exec, grimblast --freeze --notify copy area # Screen snip (select area) >> clipboard
+bindl = , Print, exec, grim - | wl-copy # Screenshot >> clipboard
+bindl = Ctrl, Print, exec, mkdir -p ~/Pictures/Screenshots && grimblast --notify copysave screen ~/Pictures/Screenshots/Screenshot_"$(date '+%Y-%m-%d_%H.%M.%S')".png # Screenshot >> clipboard & file
+
+# OCR
+bind = Super+Shift, T, exec, grim -g "$(slurp $SLURP_ARGS)" "tmp.png" && tesseract -l eng "tmp.png" - | wl-copy && rm "tmp.png" # Screen snip to text >> clipboard
+
+# Color picker
+bind = Super+Shift, C, exec, hyprpicker -a # Pick color (Hex) >> clipboard
+
+# Recording
+bind = Super+Alt, R, exec, ~/.config/ags/scripts/record-script.sh # Record region (no sound)
+bind = Ctrl+Alt, R, exec, ~/.config/ags/scripts/record-script.sh --fullscreen # [hidden] Record screen (no sound)
+bind = Super+Shift+Alt, R, exec, ~/.config/ags/scripts/record-script.sh --fullscreen-sound # Record screen (with sound)
+
+##! Session
+bind  = Super, L, exec, loginctl lock-session # Lock
+bind  = Ctrl+Super, L, exec, ags run-js 'lock.lock()' # [hidden]
+bind  = Super+Shift, L, exec, loginctl lock-session # [hidden]
+bindl = Super+Shift, L, exec, sleep 0.1 && systemctl suspend || loginctl suspend # Suspend system
+bind  = Ctrl+Shift+Alt, Delete, exec, pkill wlogout || wlogout -p layer-shell # [hidden]
+bind  = Ctrl+Shift+Alt+Super, Delete, exec, systemctl poweroff || loginctl poweroff # [hidden] Power off
+
+#!
+##! Window management
+# Focusing
+#/# bind = Super, ←/↑/→/↓,, # Move focus in direction
+bind = Super, Left, movefocus, l # [hidden]
+bind = Super, Right, movefocus, r # [hidden]
+bind = Super, Up, movefocus, u # [hidden]
+bind = Super, Down, movefocus, d # [hidden]
+bind = Super, BracketLeft, movefocus, l # [hidden]
+bind = Super, BracketRight, movefocus, r # [hidden]
+
+# Mouse
+bindm = Super, mouse:272, movewindow
+bindm = Super, mouse:273, resizewindow
+
+# Close / kill
+bind = Super, Q, killactive,
+bind = Super+Shift+Alt, Q, exec, hyprctl kill # Pick and kill a window
+
+##! Window arrangement
+#/# bind = Super+Shift, ←/↑/→/↓,, # Window: move in direction
+bind = Super+Shift, Left, movewindow, l # [hidden]
+bind = Super+Shift, Right, movewindow, r # [hidden]
+bind = Super+Shift, Up, movewindow, u # [hidden]
+bind = Super+Shift, Down, movewindow, d # [hidden]
+
+# Resize
+#/# binde = Super, +/-,, # Window: split ratio +/- 0.1
+binde = Super, Comma, resizeactive, -50 0 # [hidden]
+binde = Super, Period, resizeactive, 50 0 # [hidden]
+binde = Super+Shift, Comma, resizeactive, 0 -50 # [hidden]
+binde = Super+Shift, Period, resizeactive, 0 50 # [hidden]
+
+# Layout & positioning
+bind = Super+Alt, P, togglefloating,
+bind = Super+Alt, F, fullscreenstate, 0 3 # Toggle fake fullscreen
+bind = Super, F, fullscreen, 0 # Fullscreen
+bind = Super, J, togglesplit
+bind = Super, P, pin # Pin window
+bind = Ctrl+Super, Backslash, resizeactive, exact 640 480 # [hidden]
+
+#!
+##! Workspace navigation
+# Switch by number
+#/# bind = Super, Hash,, # Focus workspace # (1, 2, 3, 4, ...)
+bind = Super, 1, exec, ~/.config/ags/scripts/hyprland/workspace_action.sh workspace 1 # [hidden]
+bind = Super, 2, exec, ~/.config/ags/scripts/hyprland/workspace_action.sh workspace 2 # [hidden]
+bind = Super, 3, exec, ~/.config/ags/scripts/hyprland/workspace_action.sh workspace 3 # [hidden]
+bind = Super, 4, exec, ~/.config/ags/scripts/hyprland/workspace_action.sh workspace 4 # [hidden]
+bind = Super, 5, exec, ~/.config/ags/scripts/hyprland/workspace_action.sh workspace 5 # [hidden]
+bind = Super, 6, exec, ~/.config/ags/scripts/hyprland/workspace_action.sh workspace 6 # [hidden]
+bind = Super, 7, exec, ~/.config/ags/scripts/hyprland/workspace_action.sh workspace 7 # [hidden]
+bind = Super, 8, exec, ~/.config/ags/scripts/hyprland/workspace_action.sh workspace 8 # [hidden]
+bind = Super, 9, exec, ~/.config/ags/scripts/hyprland/workspace_action.sh workspace 9 # [hidden]
+bind = Super, 0, exec, ~/.config/ags/scripts/hyprland/workspace_action.sh workspace 10 # [hidden]
+
+# Switch adjacent
+#/# bind = Ctrl+Super, ←/→,, # Workspace: focus left/right
+bind = Ctrl+Super, Right, workspace, +1 # [hidden]
+bind = Ctrl+Super, Left, workspace, -1 # [hidden]
+bind = Ctrl+Super, BracketLeft, workspace, -1 # [hidden]
+bind = Ctrl+Super, BracketRight, workspace, +1 # [hidden]
+bind = Ctrl+Super, Up, workspace, -5 # [hidden]
+bind = Ctrl+Super, Down, workspace, +5 # [hidden]
+#/# bind = Super, Scroll ↑/↓,, # Workspace: focus left/right
+bind = Super, mouse_up, workspace, +1 # [hidden]
+bind = Super, mouse_down, workspace, -1 # [hidden]
+#/# bind = Super, Page_↑/↓,, # Workspace: focus left/right
+bind = Super, Page_Down, workspace, +1 # [hidden]
+bind = Super, Page_Up, workspace, -1 # [hidden]
+
+# Special workspace
+bind = Ctrl+Super, S, togglespecialworkspace, # [hidden]
+bind = Super+Alt, S, movetoworkspacesilent, special
+
+# Window switcher
+bind = Alt, Tab, cyclenext # [hidden]
+bind = Alt, Tab, bringactivetotop, # [hidden]
+
+##! Workspace management
+# Move window to workspace by number
+#/# bind = Super+Alt, Hash,, # Window: move to workspace # (1, 2, 3, 4, ...)
+bind = Super+Alt, 1, exec, ~/.config/ags/scripts/hyprland/workspace_action.sh movetoworkspacesilent 1 # [hidden]
+bind = Super+Alt, 2, exec, ~/.config/ags/scripts/hyprland/workspace_action.sh movetoworkspacesilent 2 # [hidden]
+bind = Super+Alt, 3, exec, ~/.config/ags/scripts/hyprland/workspace_action.sh movetoworkspacesilent 3 # [hidden]
+bind = Super+Alt, 4, exec, ~/.config/ags/scripts/hyprland/workspace_action.sh movetoworkspacesilent 4 # [hidden]
+bind = Super+Alt, 5, exec, ~/.config/ags/scripts/hyprland/workspace_action.sh movetoworkspacesilent 5 # [hidden]
+bind = Super+Alt, 6, exec, ~/.config/ags/scripts/hyprland/workspace_action.sh movetoworkspacesilent 6 # [hidden]
+bind = Super+Alt, 7, exec, ~/.config/ags/scripts/hyprland/workspace_action.sh movetoworkspacesilent 7 # [hidden]
+bind = Super+Alt, 8, exec, ~/.config/ags/scripts/hyprland/workspace_action.sh movetoworkspacesilent 8 # [hidden]
+bind = Super+Alt, 9, exec, ~/.config/ags/scripts/hyprland/workspace_action.sh movetoworkspacesilent 9 # [hidden]
+bind = Super+Alt, 0, exec, ~/.config/ags/scripts/hyprland/workspace_action.sh movetoworkspacesilent 10 # [hidden]
+
+# Move window to adjacent workspace
+bind = Ctrl+Super+Shift, Up, movetoworkspacesilent, special # [hidden]
+bind = Ctrl+Super+Shift, Right, movetoworkspace, +1 # [hidden]
+bind = Ctrl+Super+Shift, Left, movetoworkspace, -1 # [hidden]
+#/# bind = Super+Shift, Scroll ↑/↓,, # Window: move to workspace left/right
+bind = Super+Shift, mouse_down, movetoworkspace, -1 # [hidden]
+bind = Super+Shift, mouse_up, movetoworkspace, +1 # [hidden]
+#/# bind = Super+Shift, Page_↑/↓,, # Window: move to workspace left/right
+bind = Super+Shift, Page_Down, movetoworkspace, +1 # [hidden]
+bind = Super+Shift, Page_Up, movetoworkspace, -1 # [hidden]
+
+#!
+##! Widgets
+bindr = Ctrl+Super, R, exec, killall ags ydotool; ags & # Restart widgets
+bindr = Ctrl+Super+Alt, R, exec, hyprctl reload; killall ags ydotool; ags & # [hidden]
+bind  = Ctrl+Alt, Slash, exec, ags -t bar-0 # Cycle bar mode (normal, focus)
+bind  = Super, D, exec, pkill rofi || $HOME/.config/rofi/scripts/launcher_t6 # Toggle overview/launcher
+bind  = Super, Tab, exec, $HOME/.config/rofi/scripts/launcher_t6 # [hidden]
+bind  = Super, Slash, exec, for ((i=0; i<$(hyprctl monitors -j | jq length); i++)); do ags -t "cheatsheet""$i"; done # Show cheatsheet
+bind  = Super, A, exec, ags -t dashboardmenu # [hidden]
+bind  = Super, S, exec, ags -t energymenu # Toggle right sidebar
+bind  = Super, M, exec, ags -t mediamenu
+bind  = Super, N, exec, ags -t notificationsmenu
+bind  = Ctrl+Alt, Delete, exec, pkill rofi || $HOME/.config/rofi/scripts/powermenu_t5 # Toggle power menu
+bind  = Ctrl+Super, G, exec, for ((i=0; i<$(hyprctl monitors -j | jq length); i++)); do ags -t "crosshair""$i"; done # Toggle crosshair
+
+# Testing
+bind = Super+Alt, F12, exec, notify-send 'Test notification' "Here's a really long message to test truncation and wrapping\nYou can middle click or flick this notification to dismiss it!" -a 'Shell' -A "Test1=I got it!" -A "Test2=Another action" -t 5000 # [hidden]
+bind = Super+Alt, Equal, exec, notify-send "Urgent notification" "Ah hell no" -u critical -a 'Hyprland keybind' # [hidden]
+
+#!
+##! Apps
+bind = Ctrl+Super, V, exec, code --password-store=gnome --enable-features=UseOzonePlatform --ozone-platform=wayland # Launch VSCode (editor)
+bind = Super, E, exec, nemo # Launch file manager
+bind = Super, W, exec, zen-browser # [hidden]
+bind = Ctrl+Super, W, exec, brave # Launch Brave (browser)
+bind = Super, X, exec, gnome-text-editor --new-window # Launch GNOME Text Editor
+bind = Super+Shift, W, exec, onlyoffice-desktopeditors # Launch OnlyOffice
+bind = Super, I, exec, XDG_CURRENT_DESKTOP="gnome" gnome-control-center # Launch GNOME Settings
+bind = Super+Alt, V, exec, pavucontrol # Launch pavucontrol (volume mixer)
+bind = Ctrl+Super+Shift, V, exec, easyeffects # Launch EasyEffects (equalizer & other audio effects)
+bind = Ctrl+Shift, Escape, exec, gnome-system-monitor # Launch GNOME System monitor
+bind = Ctrl+Super, Slash, exec, pkill anyrun || anyrun # Toggle fallback launcher: anyrun
+bind = Super+Alt, Slash, exec, pkill anyrun || fuzzel # Toggle fallback launcher: fuzzel
+bind = Ctrl+Super, E, exec, rnote
+bind = Ctrl+Super, A, exec, spotify --enable-features=UseOzonePlatform --ozone-platform=wayland --force-device-scale-factor=1.5
+
